@@ -50,4 +50,8 @@ repos.on('push', function (push) {
   push.accept();
 });
 
-server.listen(process.env.PORT);
+if (!module.parent) {
+  server.listen(process.env.PORT);
+};
+
+module.exports = server;
