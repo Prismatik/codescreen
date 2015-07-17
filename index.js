@@ -23,6 +23,13 @@ var server = http.createServer(function (req, res) {
     return res.end();
   }
 
+  if (auth.username === 'admin' && req.url.match(/genCreds/)) {
+    var params = url.parse(req.url, true).query;
+    var hash = _util.createHash(process.env.CODESCREEN_SECRET+params.username);
+    var str = 'http://'+params.username+':'+hash+'@'+process.env.DOMAIN+':'+process.env.PORT+'/'+(params.repo || '')+'\n';
+    return res.end(str);
+  };
+
   // Rewrite all pushes so they go to the username's repo, not the original
   if (req.url.match(/git-receive-pack/)) {
     var orig = req.url.split('/')[1];
